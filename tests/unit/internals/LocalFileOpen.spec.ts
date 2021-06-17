@@ -1,4 +1,4 @@
-import { TestCase } from '../testcase';
+import { TestCase } from '../../testcase';
 import { LocalFileOpenSpecimen } from './LocalFileOpenSpecimen';
 
 describe('LocalFileOpen', () => {

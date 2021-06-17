@@ -1,4 +1,4 @@
-import { Key } from '../../src/internal/Key';
+import { Key } from '../../../src/internal/Key';
 
 describe('Key', () => {
   it('AccessorsUsingFakeKeyData', () => {

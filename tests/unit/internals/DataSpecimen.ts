@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { DataMixin } from '../../src/internal/DataMixin';
+import { DataMixin } from '../../../src/internal/DataMixin';
 
 export class DataSpecimen extends DataMixin {
   constructor(data: Record<string, unknown>) {

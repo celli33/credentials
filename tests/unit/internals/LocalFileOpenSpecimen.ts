@@ -1,4 +1,4 @@
-import { LocalFileOpen } from '../../src/internal/LocalFileOpen';
+import { LocalFileOpen } from '../../../src/internal/LocalFileOpen';
 
 export class LocalFileOpenSpecimen extends LocalFileOpen {
   public localFileOpen(filename: string): string {
