@@ -1,27 +1,33 @@
 import { realpathSync, readFileSync } from 'fs';
 
-export class LocalFileOpen {
-  protected static localFileOpen(filename: string): string {
-    if ('file://' === filename.substr(0, 7)) {
-      filename = filename.substr(7);
-    }
+type Constructor = new (...args: any[]) => {};
 
-    if ('' === filename) {
-      throw new Error('The file to open is empty');
-    }
-    let path = '';
-    try {
-      path = realpathSync(filename) || '';
-    } catch (e) {}
+function LocalFileOpenTrait<TBase extends Constructor>(Base: TBase) {
+  return class LocalFileOpen extends Base {
+    public localFileOpen(filename: string): string {
+      if ('file://' === filename.substr(0, 7)) {
+        filename = filename.substr(7);
+      }
 
-    if ('' === path) {
-      throw new Error('Unable to locate the file to open');
-    }
+      if ('' === filename) {
+        throw new Error('The file to open is empty');
+      }
+      let path = '';
+      try {
+        path = realpathSync(filename) || '';
+      } catch (e) {}
 
-    const contents = readFileSync(path).toString();
-    if ('' === contents) {
-      throw new Error('File content is empty');
+      if ('' === path) {
+        throw new Error('Unable to locate the file to open');
+      }
+
+      const contents = readFileSync(path).toString();
+      if ('' === contents) {
+        throw new Error('File content is empty');
+      }
+      return contents;
     }
-    return contents;
-  }
+  };
 }
+
+export { LocalFileOpenTrait };
