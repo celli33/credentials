@@ -1,5 +1,11 @@
-import { LocalFileOpenMixin } from '../../../src/internal/LocalFileOpenTrait';
+import { use } from 'typescript-mix';
+import { LocalFileOpen } from '../../../src/internal/LocalFileOpen';
 
-const LocalFileOpenTrait = LocalFileOpenMixin(class {});
+export interface LocalFileOpenSpecimen extends LocalFileOpen {}
+export class LocalFileOpenSpecimen {
+  @use(LocalFileOpen) this;
 
-export class LocalFileOpenSpecimen extends LocalFileOpenTrait {}
+  public localFileOpen(filename: string): string {
+    return LocalFileOpen.localFileOpen(filename);
+  }
+}
