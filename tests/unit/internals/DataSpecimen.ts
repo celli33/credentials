@@ -26,4 +26,8 @@ export class DataSpecimen extends DataMixin {
   public extractDateTime(key: string): DateTime {
     return super.extractDateTime(key);
   }
+
+  public extractObject(key: string): Record<string, unknown> {
+    return super.extractObject(key);
+  }
 }

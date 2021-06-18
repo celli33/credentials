@@ -6,6 +6,9 @@ const newSpecimen = new DataSpecimen({
   int: 1,
   date: 1547388916,
   array: [{ foo: 'bar' }],
+  object: {
+    foo: 'bar',
+  },
 });
 describe('DataMixin', () => {
   it('ExtractString', () => {
@@ -38,5 +41,13 @@ describe('DataMixin', () => {
     expect(specimen.extractArray('array')).toStrictEqual([{ foo: 'bar' }]);
     expect(specimen.extractArray('date')).toStrictEqual([]);
     expect(specimen.extractArray('nothing')).toStrictEqual([]);
+  });
+  it('ExtractObject', () => {
+    const specimen = newSpecimen;
+    expect(specimen.extractObject('object')).toStrictEqual({
+      foo: 'bar',
+    });
+    expect(specimen.extractObject('date')).toStrictEqual({});
+    expect(specimen.extractObject('nothing')).toStrictEqual({});
   });
 });

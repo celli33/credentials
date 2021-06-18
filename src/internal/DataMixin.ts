@@ -31,6 +31,14 @@ export class DataMixin {
     return data;
   }
 
+  protected extractObject(key: string): Record<string, unknown> {
+    const data = this.data[key] || null;
+    if (!data || typeof data !== 'object') {
+      return {};
+    }
+    return data as Record<string, unknown>;
+  }
+
   protected extractDateTime(key: string): DateTime {
     return DateTime.fromMillis(this.extractInteger(key) * 1000);
   }
