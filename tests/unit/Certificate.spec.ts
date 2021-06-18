@@ -1,16 +1,15 @@
-import { newline_toUnix } from 'jsrsasign';
 import { DateTime } from 'luxon';
 import { Certificate } from '../../src/Certificate';
 import { SatTypeEnum } from '../../src/internal/SatTypeEnum';
 import { TestCase } from '../testcase';
 
-function createCertificate(): Certificate {
+const createCertificate = (): Certificate => {
   return new Certificate(TestCase.fileContents('FIEL_AAA010101AAA/certificate.cer'));
-}
+};
 
-function createCertificateSello(): Certificate {
+const createCertificateSello = (): Certificate => {
   return new Certificate(TestCase.fileContents('CSD01_AAA010101AAA/certificate.cer'));
-}
+};
 
 describe('Certificate', () => {
   it('PemContents', () => {

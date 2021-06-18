@@ -29,7 +29,7 @@ export class PublicKey {
     return new PublicKey(LocalFileOpen.localFileOpen(filename));
   }
 
-  public verify(data: string, signature: string, algorithm = AlgoSign.SHA256withRSA) {
+  public verify(data: string, signature: string, algorithm = AlgoSign.SHA256withRSA): boolean {
     return this.callOnPublicKey((publicKey: any) => {
       try {
         return this.openSslVerify(data, signature, publicKey, algorithm);

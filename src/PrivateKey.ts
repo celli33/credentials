@@ -1,4 +1,4 @@
-import { KEYUTIL, RSAKey, KJUR, X509 } from 'jsrsasign';
+import { KEYUTIL, RSAKey, KJUR, X509, pemtohex } from 'jsrsasign';
 import { KeyEnumType } from './internal/KeyEnumType';
 import { use } from 'typescript-mix';
 import { Key, RSAKeyObject } from './internal/Key';
@@ -6,6 +6,7 @@ import { LocalFileOpen } from './internal/LocalFileOpen';
 import { PemExtractor } from './PemExtractor';
 import { PublicKey } from './PublicKey';
 import { AlgoSign } from './internal/AlgorithmSignatureEnum';
+import { Certificate } from './Certificate';
 
 export interface PrivateKey extends Key, LocalFileOpen {}
 export class PrivateKey {
@@ -27,12 +28,16 @@ export class PrivateKey {
     this.pemVar = pem;
     this.passPhraseVar = passPhrase;
     this.data = this.callOnPrivateKey((privateKey: any) => {
-      const pem = KEYUTIL.getPEM(privateKey, 'PKCS8PRV', passPhrase);
+      const privKeyJWK = KEYUTIL.getJWKFromKey(privateKey);
+      let { e, kty, n } = privKeyJWK;
+      const pubKeyJWK = { e, kty, n };
+      const pubKey = KEYUTIL.getKey(pubKeyJWK);
+      const pubKeyPEMText = KEYUTIL.getPEM(pubKey);
       const data: Record<string, unknown> = {};
       if (privateKey instanceof RSAKey) {
         const bits = (privateKey as unknown as RSAKeyObject).n.bitLength();
         data['bits'] = bits;
-        data['key'] = pem;
+        data['key'] = pubKeyPEMText;
         data[KeyEnumType.KEYTYPE_RSA] = privateKey;
         data['type'] = KeyEnumType.KEYTYPE_RSA;
       }
@@ -53,7 +58,7 @@ export class PrivateKey {
   }
 
   public publicKey(): PublicKey {
-    if (this.publicKeyVar === null) {
+    if (!this.publicKeyVar) {
       this.publicKeyVar = new PublicKey(this.publicKeyContents());
     }
     return this.publicKeyVar;
@@ -74,6 +79,18 @@ export class PrivateKey {
         throw new Error('Cannot sign data: empty signature');
       }
     });
+  }
+
+  public belongsTo(certificate: Certificate): boolean {
+    return this.belongsToPEMCertificate(certificate.pem());
+  }
+
+  public belongsToPEMCertificate(certificate: string): boolean {
+    const pubKey = KEYUTIL.getKey(this.publicKeyContents()); // or certificate
+    const x = new X509();
+    x.readCertPEM(certificate);
+    const certPubKey = x.getPublicKey();
+    return JSON.stringify(certPubKey) === JSON.stringify(pubKey);
   }
 
   public callOnPrivateKey(myFunc: Function) {
