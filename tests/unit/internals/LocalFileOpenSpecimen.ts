@@ -1,7 +1,5 @@
-import { LocalFileOpenTrait } from '../../../src/internal/LocalFileOpen';
+import { LocalFileOpenMixin } from '../../../src/internal/LocalFileOpenTrait';
 
-class LocalFileSpecimenBase {}
+const LocalFileOpenTrait = LocalFileOpenMixin(class {});
 
-const LocalFileOpenSpecimen = LocalFileOpenTrait(LocalFileSpecimenBase);
-
-export { LocalFileOpenSpecimen };
+export class LocalFileOpenSpecimen extends LocalFileOpenTrait {}

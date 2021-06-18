@@ -1,10 +1,14 @@
 import { realpathSync, readFileSync } from 'fs';
 
-type Constructor = new (...args: any[]) => {};
+type Ctor = new (...a: any[]) => any;
 
-function LocalFileOpenTrait<TBase extends Constructor>(Base: TBase) {
-  return class LocalFileOpen extends Base {
-    public localFileOpen(filename: string): string {
+export function LocalFileOpenMixin<Super extends Ctor>(
+  superClass: Super,
+): {
+  new (...a: any[]);
+} & Super {
+  class LocalFileOpenTrait extends superClass {
+    localFileOpen(filename: string) {
       if ('file://' === filename.substr(0, 7)) {
         filename = filename.substr(7);
       }
@@ -27,7 +31,6 @@ function LocalFileOpenTrait<TBase extends Constructor>(Base: TBase) {
       }
       return contents;
     }
-  };
+  }
+  return LocalFileOpenTrait;
 }
-
-export { LocalFileOpenTrait };
