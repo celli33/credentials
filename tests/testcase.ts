@@ -1,5 +1,5 @@
+import * as rsu from 'jsrsasign-util';
 import { join } from 'path';
-import { readFileSync } from 'fs';
 
 export class TestCase {
   public static filePath(filename: string): string {
@@ -7,6 +7,6 @@ export class TestCase {
   }
 
   public static fileContents(filename: string): string {
-    return readFileSync(TestCase.filePath(filename)).toString();
+    return rsu.readFile(TestCase.filePath(filename));
   }
 }

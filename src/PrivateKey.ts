@@ -7,17 +7,7 @@ import { PemExtractor } from './PemExtractor';
 import { PublicKey } from './PublicKey';
 import { AlgoSign } from './internal/AlgorithmSignatureEnum';
 
-const chunk_split = (body: string, chunklen: number, end: string) => {
-  chunklen = parseInt(`${chunklen}`, 10) || 76;
-  end = end || '\n';
-  if (chunklen < 1) {
-    return false;
-  }
-  return body.match(new RegExp('.{0,' + chunklen + '}', 'g')).join(end);
-};
-
 export interface PrivateKey extends Key, LocalFileOpen {}
-
 export class PrivateKey {
   @use(Key, LocalFileOpen) this;
 

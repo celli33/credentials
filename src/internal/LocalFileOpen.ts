@@ -1,4 +1,5 @@
-import { realpathSync, readFileSync } from 'fs';
+import * as rsu from 'jsrsasign-util';
+import { realpathSync } from 'fs';
 
 export class LocalFileOpen {
   static localFileOpen(filename: string) {
@@ -18,7 +19,7 @@ export class LocalFileOpen {
       throw new Error('Unable to locate the file to open');
     }
 
-    const contents = readFileSync(path).toString();
+    const contents = rsu.readFile(path);
     if ('' === contents) {
       throw new Error('File content is empty');
     }

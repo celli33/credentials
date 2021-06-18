@@ -4,6 +4,6 @@
     "module": "commonjs",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "types": ["jest-extended", "node"]
+    "types": ["jest-extended", "@types/node", "jest"]
   }
 }
