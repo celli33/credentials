@@ -1,6 +1,9 @@
 import { DataMixin } from './DataMixin';
+import { KeyEnumType } from './KeyEnumType';
 
 export class Key extends DataMixin {
+  private typeKey: string;
+
   constructor(data: Record<string, unknown>) {
     super();
     this.data = data;
@@ -18,26 +21,30 @@ export class Key extends DataMixin {
     return this.extractInteger('bits');
   }
 
-  // public function type(): OpenSslKeyTypeEnum
-  // {
-  //     if (null === $this->type) {
-  //         $this->type = new OpenSslKeyTypeEnum($this->extractInteger('type'));
-  //     }
-  //     return $this->type;
-  // }
+  get type(): string {
+    if (!this.typeKey) {
+      this.typeKey = this.extractString('type');
+    }
+    return this.typeKey;
+  }
 
-  // /** @return array<mixed> */
-  // public function typeData(): array
-  // {
-  //     return $this->extractArray($this->type()->value());
-  // }
+  public typeData(): Record<string, unknown> {
+    return this.extractObject(this.typeKey);
+  }
 
-  // /**
-  //  * @param int $type one of OPENSSL_KEYTYPE_RSA, OPENSSL_KEYTYPE_DSA, OPENSSL_KEYTYPE_DH, OPENSSL_KEYTYPE_EC
-  //  * @return bool
-  //  */
-  // public function isType(int $type): bool
-  // {
-  //     return ($this->type()->index() === $type);
-  // }
+  public isType(type: string): boolean {
+    return this.type === type;
+  }
+
+  public isRSA(): boolean {
+    return this.type === KeyEnumType.KEYTYPE_RSA;
+  }
+
+  public isDSA(): boolean {
+    return this.type === KeyEnumType.KEYTYPE_DSA;
+  }
+
+  public isECDSA(): boolean {
+    return this.type === KeyEnumType.KEYTYPE_ECDSA;
+  }
 }
