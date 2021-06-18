@@ -1,11 +1,28 @@
+import { use } from 'typescript-mix';
+import { BigInteger } from 'jsrsasign';
 import { DataMixin } from './DataMixin';
 import { KeyEnumType } from './KeyEnumType';
 
-export class Key extends DataMixin {
+export interface RSAKeyObject {
+  n: BigInteger;
+  e: unknown;
+  d: unknown;
+  p: unknown;
+  q: unknown;
+  dmp1: unknown;
+  dmq1: unknown;
+  coeff: unknown;
+  isPublic: boolean;
+  isPrivate: boolean;
+}
+
+export interface Key extends DataMixin {}
+export class Key {
+  @use(DataMixin) this;
+
   private typeKey: string;
 
   constructor(data: Record<string, unknown>) {
-    super();
     this.data = data;
   }
 
