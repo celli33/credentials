@@ -58,7 +58,7 @@ export class Certificate {
   }
 
   public static convertDerToPem(contents: string): string {
-    var hexDerFileContents = rstrtohex(contents);
+    const hexDerFileContents = rstrtohex(contents);
     return new PemExtractor(
       KJUR.asn1.ASN1Util.getPEMStringFromHex(hexDerFileContents, 'CERTIFICATE'),
     ).extractCertificate();

@@ -1,4 +1,4 @@
-import { KEYUTIL, RSAKey, KJUR, X509, pemtohex } from 'jsrsasign';
+import { KEYUTIL, RSAKey, KJUR, X509, rstrtohex } from 'jsrsasign';
 import { KeyEnumType } from './internal/KeyEnumType';
 import { use } from 'typescript-mix';
 import { Key, RSAKeyObject } from './internal/Key';
@@ -23,7 +23,8 @@ export class PrivateKey {
     const pemExtractor = new PemExtractor(source);
     let pem = pemExtractor.extractPrivateKey();
     if (pem === '') {
-      pem = source;
+      const isEncrypted = passPhrase !== '';
+      pem = PrivateKey.convertDerToPem(source, isEncrypted);
     }
     this.pemVar = pem;
     this.passPhraseVar = passPhrase;
@@ -47,6 +48,12 @@ export class PrivateKey {
 
   public static openFile(filename: string, passPhrase: string): PrivateKey {
     return new PrivateKey(LocalFileOpen.localFileOpen(filename), passPhrase);
+  }
+
+  public static convertDerToPem(contents: string, isEncrypted: boolean): string {
+    const pemHeader = isEncrypted ? 'ENCRYPTED PRIVATE KEY' : 'PRIVATE KEY';
+    const hexDerFileContents = rstrtohex(contents);
+    return new PemExtractor(KJUR.asn1.ASN1Util.getPEMStringFromHex(hexDerFileContents, pemHeader)).extractPrivateKey();
   }
 
   public pem(): string {

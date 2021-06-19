@@ -46,7 +46,7 @@ export class PemExtractor {
   }
 
   protected extractRsaProtected(): string {
-    let pattern = `^-----BEGIN RSA PRIVATE KEY-----\r?\nProc-Type: .+\r?\nDEK-Info: .+\r?\n\r?\n([A-Za-z0-9+\/=]+\r?\n)+-----END RSA PRIVATE KEY-----\r?\n?-----END RSA PRIVATE KEY-----\r?\n?$`;
+    let pattern = `^-----BEGIN RSA PRIVATE KEY-----\r?\nProc-Type: .+\r?\nDEK-Info: .+\r?\n\r?\n([A-Za-z0-9+\/=]+\r?\n)+-----END RSA PRIVATE KEY-----\r?\n?$`;
     const matches = this.getContents().match(new RegExp(pattern, 'm'));
     return this.normalizeLineEndings(`${matches ? matches[0] : ''}`);
   }
