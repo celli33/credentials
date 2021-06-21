@@ -1,9 +1,12 @@
 {
   "name": "@nodecfdi/credentials",
   "version": "1.0.0",
-  "description": "",
+  "description": "Library to use eFirma (fiel) and CSD (sellos) from SAT",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
@@ -12,9 +15,28 @@
     "test": "jest",
     "coverage": "jest --coverage"
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nodecfdi/credentials.git"
+  },
+  "keywords": [
+    "certificate",
+    "sat",
+    "csd",
+    "fiel",
+    "signing",
+    "firmar",
+    "factura",
+    "rfc",
+    "efirma",
+    "sellos"
+  ],
   "author": "OcelotlStudio <contacto@ocelotlstudio.com>",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nodecfdi/credentials/issues"
+  },
+  "homepage": "https://github.com/nodecfdi/credentials#readme",
   "devDependencies": {
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
