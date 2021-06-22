@@ -11,3 +11,5 @@
 
 - [ ] Obtener el NID del algoritmo usado en la firma.
 
+- [ ] Función que permita cambiar la contraseña de la llave privada.
+
