@@ -1,7 +1,7 @@
-import { KEYUTIL, RSAKey, KJUR, X509 } from 'jsrsasign';
+import { KEYUTIL, RSAKey, KJUR } from 'jsrsasign';
 import { use } from 'typescript-mix';
 import { AlgoSign } from './internal/AlgorithmSignatureEnum';
-import { Key, RSAKeyObject } from './internal/Key';
+import { DSAKeyObject, Key, RSAKeyObject } from './internal/Key';
 import { KeyEnumType } from './internal/KeyEnumType';
 import { LocalFileOpen } from './internal/LocalFileOpen';
 
@@ -19,6 +19,14 @@ export class PublicKey {
         data['key'] = pem;
         data[KeyEnumType.KEYTYPE_RSA] = pubKey;
         data['type'] = KeyEnumType.KEYTYPE_RSA;
+      } else if (pubKey instanceof KJUR.crypto.DSA) {
+        const bits = (pubKey as unknown as DSAKeyObject).p.bitLength();
+        data['bits'] = bits;
+        data['key'] = pem;
+        data[KeyEnumType.KEYTYPE_DSA] = pubKey;
+        data['type'] = KeyEnumType.KEYTYPE_DSA;
+      } else {
+        throw new Error('Cannot open public key');
       }
       return data;
     }, source);
@@ -32,14 +40,14 @@ export class PublicKey {
   public verify(data: string, signature: string, algorithm = AlgoSign.SHA256withRSA): boolean {
     return this.callOnPublicKey((publicKey: any) => {
       try {
-        return this.openSslVerify(data, signature, publicKey, algorithm);
+        return this.signVerify(data, signature, publicKey, algorithm);
       } catch (e) {
         throw new Error('Verify error: ' + e.message);
       }
     });
   }
 
-  protected openSslVerify(
+  protected signVerify(
     data: string,
     signature: string,
     publicKey: string,

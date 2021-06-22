@@ -44,7 +44,7 @@ export class Certificate {
     }
     this.pemVar = pem;
     this.data = (x as unknown as { getParam(): Record<string, unknown> }).getParam();
-    this.rfcVar = this.subjectData('uniqueIdentifier').split(" ")[0] || '';
+    this.rfcVar = this.subjectData('uniqueIdentifier').split(' ')[0] || '';
     this.legalNameVar = this.subjectData('2.5.4.41');
     this.rawCert = x;
   }
@@ -72,12 +72,6 @@ export class Certificate {
 
   public pem(): string {
     return this.pemVar;
-  }
-
-  public pemAsOneLine(): string {
-    const arr = this.pem().split('\n');
-    const arrFixed = arr.filter((x) => /^((?!-).)*$/.test(x));
-    return arrFixed.join('');
   }
 
   public parsed(): Record<string, unknown> {

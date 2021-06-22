@@ -45,6 +45,8 @@ describe('Credential', () => {
     );
     expect(credential.isCsd()).toBeTruthy();
     expect(credential.isFiel()).toBeFalsy();
+    expect(credential.rfc()).toBe('AAA010101AAA');
+    expect(credential.legalName()).toBe('ACCEM SERVICIOS EMPRESARIALES SC');
     const textToSign = 'The quick brown fox jumps over the lazy dog';
     const signature = credential.sign(textToSign);
     expect(signature).not.toBeEmpty();
