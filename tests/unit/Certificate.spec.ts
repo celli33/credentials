@@ -41,7 +41,7 @@ describe('Certificate', () => {
     expect(certificate.validOn()).toBe(expected);
   });
   it('Rfc', () => {
-    expect(createCertificate().rfc()).toBe('AAA010101AAA / HEGT7610034S2');
+    expect(createCertificate().rfc()).toBe('AAA010101AAA');
   });
   it('LegalName', () => {
     expect(createCertificate().legalName()).toBe('ACCEM SERVICIOS EMPRESARIALES SC');
@@ -61,6 +61,17 @@ describe('Certificate', () => {
     const first = certificate.publicKey();
     expect(certificate.publicKey()).toBe(first);
   });
+  it('Parsed', () => {
+    const certificate = createCertificate();
+    const parsed = certificate.parsed();
+    const expected = (parsed.subject as Record<string, unknown>).str;
+    expect(expected).not.toBeNull();
+    expect(certificate.name()).toBe(expected);
+  });
+  it('Hash', () => {
+    const certificate = createCertificate();
+    expect(certificate.fingerPrint()).toContain('3d2d560e90dcc3f75c46f30c2850cf9fb0640ccb');
+  });
   it('Version', () => {
     const certificate = createCertificate();
     expect(certificate.version()).toBe('3');
@@ -69,5 +80,13 @@ describe('Certificate', () => {
     const certificate = createCertificate();
     expect(certificate.validFrom()).toMatch(/\d+z/gi);
     expect(certificate.validTo()).toMatch(/\d+z/gi);
+  });
+  it('ExtensionsIsNotEmpty', () => {
+    const certificate = createCertificate();
+    expect(certificate.extensions()).not.toBeEmpty();
+  });
+  it('Signature', () => {
+    const certificate = createCertificate();
+    expect(certificate.signatureTypeLN()).not.toBeEmpty();
   });
 });

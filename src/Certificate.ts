@@ -26,6 +26,7 @@ export class Certificate {
   private legalNameVar: string;
   private serialNumberVar?: SerialNumber;
   private publicKeyVar?: PublicKey;
+  private rawCert: X509;
 
   constructor(contents: string) {
     if ('' === contents) {
@@ -43,8 +44,9 @@ export class Certificate {
     }
     this.pemVar = pem;
     this.data = (x as unknown as { getParam(): Record<string, unknown> }).getParam();
-    this.rfcVar = this.subjectData('uniqueIdentifier');
+    this.rfcVar = this.subjectData('uniqueIdentifier').split(' ')[0] || '';
     this.legalNameVar = this.subjectData('2.5.4.41');
+    this.rawCert = x;
   }
 
   private findValueOnX500Array(subjectArray: X500NameArray, target: string): string {
@@ -72,12 +74,6 @@ export class Certificate {
     return this.pemVar;
   }
 
-  public pemAsOneLine(): string {
-    const arr = this.pem().split('\n');
-    const arrFixed = arr.filter((x) => /^((?!-).)*$/.test(x));
-    return arrFixed.join('');
-  }
-
   public parsed(): Record<string, unknown> {
     return this.data;
   }
@@ -94,9 +90,9 @@ export class Certificate {
     return this.subjectData('OU');
   }
 
-  // public name(): string {
-  //   return $this->extractString('name');
-  // }
+  public name(): string {
+    return `${this.extractObject('subject').str}`;
+  }
 
   public subject(): X500NameArray {
     return this.extractObject('subject').array as X500NameArray;
@@ -104,6 +100,10 @@ export class Certificate {
 
   public subjectData(key: string): string {
     return this.findValueOnX500Array(this.subject(), key);
+  }
+
+  public fingerPrint(): string {
+    return KJUR.crypto.Util.hashHex(this.rawCert.hex, 'sha1');
   }
 
   public issuer(): X500NameArray {
@@ -140,6 +140,14 @@ export class Certificate {
 
   public validToDateTime(): DateTime {
     return DateTime.fromJSDate(zulutodate(this.validTo()));
+  }
+
+  public signatureTypeLN(): string {
+    return this.rawCert.getSignatureAlgorithmName();
+  }
+
+  public extensions(): Array<Record<string, unknown>> {
+    return this.extractArray('ext') as Array<Record<string, unknown>>;
   }
 
   public publicKey(): PublicKey {

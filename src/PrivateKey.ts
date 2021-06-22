@@ -1,7 +1,7 @@
 import { KEYUTIL, RSAKey, KJUR, X509, rstrtohex } from 'jsrsasign';
 import { KeyEnumType } from './internal/KeyEnumType';
 import { use } from 'typescript-mix';
-import { Key, RSAKeyObject } from './internal/Key';
+import { DSAKeyObject, Key, RSAKeyObject } from './internal/Key';
 import { LocalFileOpen } from './internal/LocalFileOpen';
 import { PemExtractor } from './PemExtractor';
 import { PublicKey } from './PublicKey';
@@ -41,6 +41,14 @@ export class PrivateKey {
         data['key'] = pubKeyPEMText;
         data[KeyEnumType.KEYTYPE_RSA] = privateKey;
         data['type'] = KeyEnumType.KEYTYPE_RSA;
+      } else if (privateKey instanceof KJUR.crypto.DSA) {
+        const bits = (privateKey as unknown as DSAKeyObject).p.bitLength();
+        data['bits'] = bits;
+        data['key'] = pem;
+        data[KeyEnumType.KEYTYPE_DSA] = pubKey;
+        data['type'] = KeyEnumType.KEYTYPE_DSA;
+      } else {
+        throw new Error('Cannot open public key');
       }
       return data;
     });

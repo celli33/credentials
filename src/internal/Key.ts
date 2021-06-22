@@ -16,6 +16,13 @@ export interface RSAKeyObject {
   isPrivate: boolean;
 }
 
+export interface DSAKeyObject {
+  p: BigInteger;
+  q: unknown;
+  g: unknown;
+  y: unknown;
+}
+
 export interface Key extends DataMixin {}
 export class Key {
   @use(DataMixin) this;
