@@ -182,7 +182,17 @@ export class Certificate {
     }
     if ('' !== decimal) {
       // in some cases openssl report serialNumberHex on serialNumber
-      if (KJUR.lang.String.isHex(decimal)) {
+      if (
+        (
+          KJUR as unknown as {
+            lang: {
+              String: {
+                isHex(v: string): boolean;
+              };
+            };
+          }
+        ).lang.String.isHex(decimal)
+      ) {
         return SerialNumber.createFromHexadecimal(decimal.slice(2));
       }
       return SerialNumber.createFromDecimal(decimal);
