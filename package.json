@@ -10,7 +10,7 @@
   "scripts": {
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "build": "tsc",
     "test": "jest",
     "coverage": "jest --coverage"
